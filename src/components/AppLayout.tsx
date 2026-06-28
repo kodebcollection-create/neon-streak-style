@@ -1,4 +1,4 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import {
   Home, Compass, PlusSquare, Bell, Users, MessageCircle, User, Settings,
   Flame, Search, ChevronDown, Moon, Award, Crown, Star, Plus
@@ -30,6 +30,7 @@ export function Logo() {
 }
 
 function StreakWidget() {
+  const navigate = useNavigate();
   const days = ["M", "T", "W", "T", "F", "S", "S"];
   return (
     <div className="panel p-4">
@@ -57,7 +58,7 @@ function StreakWidget() {
         ))}
       </div>
       <p className="text-center text-xs text-muted-foreground mt-3">Best Streak: 15 days</p>
-      <button className="btn-pink w-full mt-3 text-sm">View Streak</button>
+      <button onClick={() => navigate({ to: "/streak" })} className="btn-pink w-full mt-3 text-sm">View Streak</button>
     </div>
   );
 }
