@@ -1,4 +1,4 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import {
   Home, Compass, PlusSquare, Bell, Users, MessageCircle, User, Settings,
   Flame, Search, ChevronDown, Moon, Award, Crown, Star, Plus
