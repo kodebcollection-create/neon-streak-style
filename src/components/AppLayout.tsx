@@ -58,7 +58,7 @@ function StreakWidget() {
         ))}
       </div>
       <p className="text-center text-xs text-muted-foreground mt-3">Best Streak: 15 days</p>
-      <button className="btn-pink w-full mt-3 text-sm">View Streak</button>
+      <button onClick={() => navigate({ to: "/streak" })} className="btn-pink w-full mt-3 text-sm">View Streak</button>
     </div>
   );
 }
