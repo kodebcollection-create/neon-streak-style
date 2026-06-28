@@ -30,6 +30,7 @@ export function Logo() {
 }
 
 function StreakWidget() {
+  const navigate = useNavigate();
   const days = ["M", "T", "W", "T", "F", "S", "S"];
   return (
     <div className="panel p-4">
