@@ -1,19 +1,61 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppLayout } from "@/components/AppLayout";
-import { User, Lock, Mail, Phone, Bell, Globe, Palette, Shield, Ban, KeyRound, Activity, HelpCircle, FileText, ShieldCheck, Info, LogOut, ChevronRight } from "lucide-react";
+import {
+  User,
+  Lock,
+  Mail,
+  Phone,
+  Bell,
+  Globe,
+  Palette,
+  Shield,
+  Ban,
+  KeyRound,
+  Activity,
+  HelpCircle,
+  FileText,
+  ShieldCheck,
+  Info,
+  LogOut,
+  ChevronRight,
+} from "lucide-react";
 
-type Row = { icon: any; title: string; sub: string; right?: string; toggle?: boolean; on?: boolean };
+type Row = {
+  icon: React.ComponentType<{ size?: number; className?: string }>;
+  title: string;
+  sub: string;
+  right?: string;
+  toggle?: boolean;
+  on?: boolean;
+};
 
 const account: Row[] = [
   { icon: User, title: "Edit Profile", sub: "Update your profile information" },
   { icon: Lock, title: "Change Password", sub: "Update your account password" },
   { icon: Mail, title: "Email Address", sub: "Update your email address", right: "dafy@gmail.com" },
-  { icon: Phone, title: "Phone Number", sub: "Update your phone number", right: "+254 712 345 678" },
+  {
+    icon: Phone,
+    title: "Phone Number",
+    sub: "Update your phone number",
+    right: "+254 712 345 678",
+  },
 ];
 
 const prefs: Row[] = [
-  { icon: Bell, title: "Push Notifications", sub: "Manage your notification preferences", toggle: true, on: true },
-  { icon: Mail, title: "Email Notifications", sub: "Receive updates via email", toggle: true, on: false },
+  {
+    icon: Bell,
+    title: "Push Notifications",
+    sub: "Manage your notification preferences",
+    toggle: true,
+    on: true,
+  },
+  {
+    icon: Mail,
+    title: "Email Notifications",
+    sub: "Receive updates via email",
+    toggle: true,
+    on: false,
+  },
   { icon: Globe, title: "Language", sub: "Choose your preferred language", right: "English" },
   { icon: Palette, title: "Appearance", sub: "Customize app appearance", right: "Dark" },
 ];
@@ -21,7 +63,12 @@ const prefs: Row[] = [
 const privacy: Row[] = [
   { icon: Shield, title: "Privacy Settings", sub: "Manage who can see your content" },
   { icon: Ban, title: "Blocked Users", sub: "Manage blocked accounts" },
-  { icon: KeyRound, title: "Two-Factor Authentication", sub: "Add extra security to your account", right: "Off" },
+  {
+    icon: KeyRound,
+    title: "Two-Factor Authentication",
+    sub: "Add extra security to your account",
+    right: "Off",
+  },
   { icon: Activity, title: "Login Activity", sub: "See where you're logged in" },
 ];
 
@@ -50,8 +97,12 @@ function Section({ title, rows }: { title: string; rows: Row[] }) {
               </div>
               {r.right && <span className="text-sm text-muted-foreground">{r.right}</span>}
               {r.toggle ? (
-                <div className={`w-11 h-6 rounded-full relative transition ${r.on ? "bg-primary" : "bg-muted"}`}>
-                  <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full transition ${r.on ? "right-0.5" : "left-0.5"}`} />
+                <div
+                  className={`w-11 h-6 rounded-full relative transition ${r.on ? "bg-primary" : "bg-muted"}`}
+                >
+                  <div
+                    className={`absolute top-0.5 w-5 h-5 bg-white rounded-full transition ${r.on ? "right-0.5" : "left-0.5"}`}
+                  />
                 </div>
               ) : (
                 <ChevronRight size={16} className="text-muted-foreground" />
@@ -70,7 +121,9 @@ function SettingsPage() {
       <div className="max-w-3xl mx-auto space-y-5">
         <div>
           <h1 className="text-3xl font-bold">Settings</h1>
-          <p className="text-muted-foreground text-sm mt-1">Manage your account, preferences and privacy.</p>
+          <p className="text-muted-foreground text-sm mt-1">
+            Manage your account, preferences and privacy.
+          </p>
         </div>
 
         <Section title="Account" rows={account} />

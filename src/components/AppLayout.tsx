@@ -1,9 +1,24 @@
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import {
-  Home, Compass, PlusSquare, Bell, Users, MessageCircle, User, Settings,
-  Flame, Search, ChevronDown, Moon, Award, Crown, Star, Plus
+  Home,
+  Compass,
+  PlusSquare,
+  Bell,
+  Users,
+  MessageCircle,
+  User,
+  Settings,
+  Flame,
+  Search,
+  ChevronDown,
+  Moon,
+  Award,
+  Crown,
+  Star,
+  Plus,
 } from "lucide-react";
 import type { ReactNode } from "react";
+import { useFitStreakStore } from "@/lib/store";
 
 const navItems = [
   { to: "/home", label: "Home", icon: Home },
@@ -31,6 +46,7 @@ export function Logo() {
 
 function StreakWidget() {
   const navigate = useNavigate();
+  const { streak } = useFitStreakStore();
   const days = ["M", "T", "W", "T", "F", "S", "S"];
   return (
     <div className="panel p-4">
@@ -38,27 +54,46 @@ function StreakWidget() {
       <div className="relative w-28 h-28 mx-auto grid place-items-center">
         <svg className="absolute inset-0 -rotate-90" viewBox="0 0 100 100">
           <circle cx="50" cy="50" r="44" fill="none" stroke="var(--border)" strokeWidth="6" />
-          <circle cx="50" cy="50" r="44" fill="none" stroke="var(--primary)"
-            strokeWidth="6" strokeDasharray="276" strokeDashoffset="40" strokeLinecap="round" />
+          <circle
+            cx="50"
+            cy="50"
+            r="44"
+            fill="none"
+            stroke="var(--primary)"
+            strokeWidth="6"
+            strokeDasharray="276"
+            strokeDashoffset="40"
+            strokeLinecap="round"
+          />
         </svg>
         <div className="text-center">
           <Flame className="mx-auto text-primary" fill="currentColor" size={22} />
-          <div className="text-2xl font-bold leading-none mt-1">12</div>
+          <div className="text-2xl font-bold leading-none mt-1">{streak.currentStreak}</div>
           <div className="text-[10px] text-muted-foreground">days</div>
         </div>
       </div>
       <div className="flex justify-between mt-3 px-1">
         {days.map((d, i) => (
           <div key={i} className="flex flex-col items-center gap-1">
-            <div className={`w-5 h-5 rounded-full grid place-items-center text-[10px] ${
-              i < 6 ? "bg-primary text-white" : "bg-muted text-muted-foreground"
-            }`}>{i < 6 ? "✓" : ""}</div>
+            <div
+              className={`w-5 h-5 rounded-full grid place-items-center text-[10px] ${
+                i < 6 || streak.hasPostedToday
+                  ? "bg-primary text-white"
+                  : "bg-muted text-muted-foreground"
+              }`}
+            >
+              {i < 6 || streak.hasPostedToday ? "✓" : ""}
+            </div>
             <span className="text-[10px] text-muted-foreground">{d}</span>
           </div>
         ))}
       </div>
-      <p className="text-center text-xs text-muted-foreground mt-3">Best Streak: 15 days</p>
-      <button onClick={() => navigate({ to: "/streak" })} className="btn-pink w-full mt-3 text-sm">View Streak</button>
+      <p className="text-center text-xs text-muted-foreground mt-3">
+        Best Streak: {streak.longestStreak} days
+      </p>
+      <button onClick={() => navigate({ to: "/streak" })} className="btn-pink w-full mt-3 text-sm">
+        View Streak
+      </button>
     </div>
   );
 }
@@ -93,21 +128,24 @@ function BadgesWidget() {
 }
 
 export function Sidebar() {
-  const pathname = useRouterState({ select: s => s.location.pathname });
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
   return (
     <aside className="hidden lg:flex flex-col w-72 shrink-0 h-screen sticky top-0 p-4 gap-4 overflow-y-auto border-r border-border bg-background">
       <Logo />
       <nav className="flex flex-col gap-1 mt-2">
-        {navItems.map(item => {
+        {navItems.map((item) => {
           const active = pathname === item.to;
           const Icon = item.icon;
           return (
-            <Link key={item.to} to={item.to}
+            <Link
+              key={item.to}
+              to={item.to}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
                 active || item.highlight
                   ? "bg-primary text-white shadow-[0_8px_24px_-12px_var(--primary)]"
                   : "text-foreground/80 hover:bg-muted"
-              }`}>
+              }`}
+            >
               <Icon size={20} />
               <span className="text-sm font-medium flex-1">{item.label}</span>
               {item.badge && (
@@ -122,7 +160,10 @@ export function Sidebar() {
       <StreakWidget />
       <BadgesWidget />
       <div className="panel p-3 flex items-center justify-between mt-auto">
-        <div className="flex items-center gap-2"><Moon size={16} /><span className="text-sm">Dark Mode</span></div>
+        <div className="flex items-center gap-2">
+          <Moon size={16} />
+          <span className="text-sm">Dark Mode</span>
+        </div>
         <div className="w-10 h-6 bg-primary rounded-full relative">
           <div className="absolute right-0.5 top-0.5 w-5 h-5 bg-white rounded-full" />
         </div>
@@ -135,10 +176,16 @@ export function TopBar() {
   return (
     <header className="sticky top-0 z-20 bg-background/80 backdrop-blur border-b border-border px-4 lg:px-6 py-3 flex items-center gap-3">
       <div className="flex-1 max-w-xl relative">
-        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <Search
+          size={16}
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+        />
         <input placeholder="Search outfits, people..." className="input-dark text-sm" />
       </div>
-      <div className="flame-badge"><Flame size={14} fill="currentColor" />12</div>
+      <div className="flame-badge">
+        <Flame size={14} fill="currentColor" />
+        12
+      </div>
       <button className="relative p-2 rounded-lg hover:bg-muted">
         <Bell size={18} />
         <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full" />
@@ -153,7 +200,7 @@ export function TopBar() {
 }
 
 export function BottomNav() {
-  const pathname = useRouterState({ select: s => s.location.pathname });
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
   const items = [
     { to: "/home", icon: Home, label: "Home" },
     { to: "/explore", icon: Compass, label: "Explore" },
@@ -162,22 +209,35 @@ export function BottomNav() {
   ];
   return (
     <nav className="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-panel border-t border-border px-2 py-2 flex items-center justify-around">
-      {items.slice(0, 2).map(i => {
+      {items.slice(0, 2).map((i) => {
         const active = pathname === i.to;
         return (
-          <Link key={i.to} to={i.to} className={`flex flex-col items-center gap-0.5 px-3 py-1 ${active ? "text-primary" : "text-muted-foreground"}`}>
-            <i.icon size={20} /><span className="text-[10px]">{i.label}</span>
+          <Link
+            key={i.to}
+            to={i.to}
+            className={`flex flex-col items-center gap-0.5 px-3 py-1 ${active ? "text-primary" : "text-muted-foreground"}`}
+          >
+            <i.icon size={20} />
+            <span className="text-[10px]">{i.label}</span>
           </Link>
         );
       })}
-      <Link to="/post" className="w-12 h-12 -mt-6 rounded-full bg-primary grid place-items-center shadow-glow text-white">
+      <Link
+        to="/post"
+        className="w-12 h-12 -mt-6 rounded-full bg-primary grid place-items-center shadow-glow text-white"
+      >
         <Plus size={24} />
       </Link>
-      {items.slice(2).map(i => {
+      {items.slice(2).map((i) => {
         const active = pathname === i.to;
         return (
-          <Link key={i.to} to={i.to} className={`flex flex-col items-center gap-0.5 px-3 py-1 ${active ? "text-primary" : "text-muted-foreground"}`}>
-            <i.icon size={20} /><span className="text-[10px]">{i.label}</span>
+          <Link
+            key={i.to}
+            to={i.to}
+            className={`flex flex-col items-center gap-0.5 px-3 py-1 ${active ? "text-primary" : "text-muted-foreground"}`}
+          >
+            <i.icon size={20} />
+            <span className="text-[10px]">{i.label}</span>
           </Link>
         );
       })}
